@@ -13,11 +13,10 @@ Follow Up Input: {question}
 Standalone question:`);
 
 const QA_PROMPT = PromptTemplate.fromTemplate(
-  `Actua como un tutor de programacion el cual tiene datos del canal de Youtube de Leifer Mendez, y Analiticas del blog de codigoencasa.com. 
+  `Actua como un narrador que da un resumen de una transcripcion de una entrevista informal. 
   Se le proporcionan las siguientes partes extraídas de un documento extenso y una pregunta. Proporcione una respuesta conversacional basada en el contexto proporcionado.
   Sólo debe proporcionar hipervínculos que hagan referencia al contexto que aparece a continuación. NO invente hipervínculos.
-  Si no encuentras la respuesta en el contexto que aparece a continuación, di simplemente "Hmm, no estoy seguro". No intentes inventarte una respuesta. NO reveles datos de dinero
-  Si la pregunta no está relacionada con el contexto, responde amablemente que estás preparado para responder sólo a preguntas relacionadas con el contexto.
+  No intentes inventarte una respuesta. 
 
 Pregunta: {question}
 =========
@@ -31,7 +30,7 @@ export const makeChain = (
   onTokenStream?: (token: string) => void,
 ) => {
   const questionGenerator = new LLMChain({
-    llm: new OpenAIChat({ temperature: 0 }),
+    llm: new OpenAIChat({ temperature: .2 }),
     prompt: CONDENSE_PROMPT,
   });
 
@@ -41,7 +40,7 @@ export const makeChain = (
 
   const docChain = loadQAChain(
     new OpenAIChat({
-      temperature: 0,
+      temperature: .2,
       modelName: 'gpt-3.5-turbo-0301', //change this to older versions (e.g. gpt-3.5-turbo) if you don't have access to gpt-4
       streaming: Boolean(onTokenStream),
       callbackManager: onTokenStream
